@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cozy Crochet</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+
+
+<body>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+function startPayment(totalAmount) {
+  var options = {
+    key: "YOUR_KEY_ID",
+    amount: totalAmount * 100,
+    currency: "INR",
+    name: "Cozy Crochet",
+    description: "Order Payment",
+    handler: function (response) {
+      alert("Payment Successful 💖");
+    }
+  };
+
+  var rzp = new Razorpay(options);
+  rzp.open();
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const buttons = document.querySelectorAll(".add-to-cart");
+  const cartItems = document.getElementById("cart-items");
+  const totalEl = document.getElementById("total");
+
+  const cartOverlay = document.getElementById("cart-overlay");
+  const openCart = document.getElementById("open-cart");
+  const closeCart = document.getElementById("close-cart");
+
+  let cart = [];
+
+  // ADD TO CART
+  buttons.forEach(button => {
+    button.addEventListener("click", () => {
+      const name = button.dataset.name;
+      const price = Number(button.dataset.price);
+
+      const existing = cart.find(item => item.name === name);
+
+      if (existing) {
+        existing.qty++;
+      } else {
+        cart.push({ name, price, qty: 1 });
+      }
+
+      renderCart();
+      cartOverlay.style.display = "flex";
+    });
+  });
+
+  // RENDER CART
+  function renderCart() {
+    cartItems.innerHTML = "";
+    let total = 0;
+
+    cart.forEach((item, index) => {
+      total += item.price * item.qty;
+
+      cartItems.innerHTML += `
+        <li>
+          ${item.name} × ${item.qty} — ₹${item.price * item.qty}
+         <button class="remove-btn" onclick="removeItem(${index})">🗑️</button>
+
+        </li>
+      `;
+    });
+
+    totalEl.textContent = total;
+  }
+
+  // REMOVE ITEM
+  window.removeItem = function(index) {
+    cart.splice(index, 1);
+    renderCart();
+  };
+
+  // OPEN & CLOSE CART
+  openCart.onclick = () => cartOverlay.style.display = "flex";
+  closeCart.onclick = () => cartOverlay.style.display = "none";
+
+});
+</script>
+
+<button id="open-cart" class="cart-btn">🛒 View Cart</button>
+
+<!-- Cart Popup -->
+<div class="cart-overlay" id="cart-overlay">
+  <div class="cart-popup">
+    <h2>🛒 Your Cart</h2>
+    <ul id="cart-items"></ul>
+    <h3>Total: ₹<span id="total">0</span></h3>
+    <button id="checkout-btn">Proceed to Payment</button>
+    <button id="close-cart">Close</button>
+
+  </div>
+</div>
+
+
+
+<header class="navbar">
+  <h2>🧶Cozyyy.Crochet</h2>
+  <p>@cozycrochet.store</p>
+</header>
+
+<section class="gallery">
+  <div class="card">
+  <img src="bee.jpeg" alt="">
+  <div class="info">
+    <h3>CROCHET BEE</h3>
+    <p>₹299</p>
+    <button class="add-to-cart" data-name="Bee" data-price="299">Add to Cart</button>
+  </div>
+</div>
+<div class="card">
+  <img src="ele.jpeg" alt="">
+  <div class="info">
+    <h3> CROCHET ELEPHANT</h3>
+    <p>₹1399</p>
+    <button class="add-to-cart" data-name="ELEPHANT" data-price="1399">Add to Cart</button>
+  </div>
+</div>
+<div class="card">
+  <img src="tur.jpeg" alt="">
+  <div class="info">
+    <h3> CROCHET TURTLE</h3>
+    <p>₹499</p>
+    <button class="add-to-cart" data-name="TURTLE" data-price="499">Add to Cart</button>
+  </div>
+</div>
+<div class="card">
+  <img src="sun.jpeg" alt="">
+  <div class="info">
+    <h3>SUNFLOWER</h3>
+    <p>₹599</p>
+    <button class="add-to-cart" data-name="SUNFLOWER" data-price="599">Add to Cart</button>
+  </div>
+</div>
+<div class="card">
+  <img src="eve.jpeg" alt="">
+  <div class="info">
+    <h3>CROCHET EVIL EYE</h3>
+    <p>₹499</p>
+    <button class="add-to-cart" data-name="EVILEYE" data-price="499">Add to Cart</button>
+  </div>
+</div>
+<div class="card">
+  <img src="pro.jpeg" alt="">
+  <div class="info">
+    <h3>CROCHET BAG</h3>
+    <p>₹999</p>
+    <button class="add-to-cart" data-name="BAG" data-price="999">Add to Cart</button>
+  </div>
+</div>
+
+</section>
+
+
+<footer>
+<h2>About Us</h2>
+  <p>
+    CozyCrochet is a small handmade brand where every piece is lovingly
+    crocheted with love, care, patience, and creativity.
+    with cutomization<3	
+    We believe in slow fashion, soft textures, and designs that feel warm
+    and personal.
+  </p>
+  <p>
+    Each product is handmade in limited quantities, making every item
+    unique—just like you 🤍
+  </p>
+  <p>Handmade with 🤍 | DM to order on Instagram</p>
+</footer>
+
+</body>
+</html>
